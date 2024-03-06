@@ -22,23 +22,61 @@ public class NotesRepository : IRepository
         return result;
     }
 
-    public Task<NoteViewModel> Find(ObjectId id)
+    public async Task<NoteViewModel?> FindOne(string id)
     {
-        throw new NotImplementedException();
+        var objectId = ObjectId.Parse(id);
+        var filter =  Builders<Note>.Filter.Eq("_id", objectId);
+        var note =  await _noteCollection.Find(filter).FirstOrDefaultAsync();
+        if (note != null)
+        {
+            return NotesMapper.MapTNoteViewModel(note);
+        }
+        return null;
     }
 
-    public Task<NoteViewModel> CreateNote(NoteViewModel entity)
+    public async Task<NoteViewModel> CreateNote(NoteViewModel entity)
     {
-        throw new NotImplementedException();
+        if (entity != null)
+        {
+            var newNote = NotesMapper.MapToNote(entity);
+            await _noteCollection.InsertOneAsync(newNote);
+            return entity;
+        }
+        return null;
     }
 
-    public Task<NoteViewModel> EditNote(ObjectId id, NoteViewModel note)
+    public async Task<NoteViewModel> EditNote(string id, NoteViewModel note)
     {
-        throw new NotImplementedException();
+        var objectId = ObjectId.Parse(id);
+        var filter =  Builders<Note>.Filter.Eq("_id", objectId);
+        var noteToUpdateCursor = await _noteCollection.Find(filter).FirstOrDefaultAsync();
+        if (noteToUpdateCursor is not null)
+        {
+            noteToUpdateCursor.Id = note.Id;
+            noteToUpdateCursor.Date = note.Date;
+            noteToUpdateCursor.Title = note.Title;
+            noteToUpdateCursor.Description = note.Description;
+
+            await _noteCollection.ReplaceOneAsync(filter, noteToUpdateCursor);
+            
+            var viewModel = NotesMapper.MapTNoteViewModel(noteToUpdateCursor);
+            return viewModel;
+        }
+
+        return null;
     }
 
-    public void DeleteNote(ObjectId id)
+    public Task DeleteNote(string id)
     {
-        throw new NotImplementedException();
+        var objectId = ObjectId.Parse(id);
+        var filter = Builders<Note>.Filter.Eq("_id", objectId);
+        var noteToDelete = _noteCollection.Find(filter).FirstOrDefault();
+        if (noteToDelete is not null)
+        {
+            _noteCollection.DeleteOne(filter);
+            return Task.CompletedTask;
+        }
+
+        return null;
     }
 }

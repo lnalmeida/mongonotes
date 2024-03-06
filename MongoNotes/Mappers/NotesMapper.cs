@@ -1,6 +1,7 @@
+using MongoDB.Bson;
 using MongoNotes.Models;
 using MongoNotes.ModelViews;
-using ZstdSharp.Unsafe;
+
 
 namespace MongoNotes.Mappers;
 
@@ -19,7 +20,7 @@ public static class NotesMapper
         return note;
     }
 
-    public static NoteViewModel MapTNoteViewModel(Note note)
+    public static NoteViewModel? MapTNoteViewModel(Note note)
     {
         var viewNote = new NoteViewModel
         {
@@ -30,5 +31,23 @@ public static class NotesMapper
         };
 
         return viewNote;
+    }
+    
+    public static NoteViewModel MapBsonDocumentToNoteViewModel(BsonDocument bsonDocument)
+    {
+        if (bsonDocument == null)
+        {
+            return null;
+        }
+
+        var noteViewModel = new NoteViewModel
+        {
+            Id = bsonDocument["_id"].AsObjectId,
+            Date = bsonDocument["date"].AsBsonDateTime.ToUniversalTime(),
+            Title = bsonDocument["title"].AsString,
+            Description = bsonDocument.AsString
+        };
+
+        return noteViewModel;
     }
 }

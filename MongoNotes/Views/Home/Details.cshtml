@@ -1,0 +1,22 @@
+@using MongoDB.Driver.Linq
+@model MongoNotes.ModelViews.NoteViewModel
+
+@{
+    Layout = Layout;
+}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Details</title>
+    </head>
+    <body>
+        <div>
+            <a href="/">Voltar</a>
+            <h1> @Model.Title </h1>
+            <p> @Model.Date.ToString("dd/MM/yyyy") </p>
+            <p> @Model.Description </p>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,34 @@
+@model MongoNotes.ModelViews.NoteViewModel
+
+@{
+    Layout = Layout;
+}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>title</title>
+    </head>
+    <body>
+        <div>
+            <a href="/">Voltar</a>
+            <h2>Adicione uma nota:</h2>
+            <form method="POST">
+                <div class="mb-3 w-25">
+                  <label asp-for="Date" class="form-label">Data:</label>
+                  <input type="date" class="form-control" asp-for="Date" id="date" name="date">
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Título:</label>
+                    <input type="text" class="form-control" asp-for="Title" id="title" name="title">
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Descrição:</label>
+                    <textarea type="text" class="form-control" id="description" asp-for="Description" name="description"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">@ViewData["btnLabel"]</button>
+            </form>  
+        </div>
+    </body>
+</html>

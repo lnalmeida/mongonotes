@@ -1,5 +1,4 @@
 ﻿@using MongoNotes.ModelViews
-@using MongoDB.Driver.Linq
 @model IEnumerable<NoteViewModel>
 @{
     ViewData["Title"] = "Notes";
@@ -24,13 +23,15 @@
       {
           <tr>
               <th scope="row">@note.Date.ToString("dd/MM/yyyy")</th>
-              <td>@note.Title</td>
               <td>
-                  <a class="btn btn-sm fw-bold" style="color: #000; background: #ffc720;" asp-action="" asp-route-id="">
+                  <a asp-action="Details" asp-route-id=@note.Id>@note.Title</a>
+              </td>
+              <td>
+                  <a class="btn btn-sm fw-bold" style="color: #000; background: #ffc720;" asp-action="Edit" asp-route-id=@note.Id>
                       <i class="fa-solid fa-pencil"></i>
                       Edit
                   </a>
-                  <a class="btn btn-sm fw-bold" style="background: #ce0a31; color: white;" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                  <a class="btn btn-sm fw-bold" style="background: #ce0a31; color: white;" asp-action="Delete" asp-route-id=@note.Id>
                       <i class="fa-solid fa-trash-can"></i>
                       Delete
                   </a>
